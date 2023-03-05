@@ -1,31 +1,28 @@
 package com.example.springboot.service;
 
-import com.example.springboot.dao.EmployeeDao;
+import com.example.springboot.dao.EmployeeRepo;
 import com.example.springboot.entity.Employee;
 import com.example.springboot.exception.EmployeeException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private EmployeeDao employeeDao;
+    private EmployeeRepo employeeRepo;
 
-    public EmployeeServiceImpl(EmployeeDao employeeDao) {
-        this.employeeDao = employeeDao;
+    public EmployeeServiceImpl(EmployeeRepo employeeRepo) {
+        this.employeeRepo = employeeRepo;
     }
 
     @Override
-    @Transactional
     public List<Employee> getAllEmployees() {
-        return employeeDao.getAllEmployees();
+        return employeeRepo.findAll();
     }
 
     @Override
-    @Transactional
     public Employee getEmployee(int id) {
-        Employee employee = employeeDao.getEmployee(id);
+        Employee employee = employeeRepo.findById(id).get();
         if (employee == null){
             try {
                 throw new EmployeeException("Employee with id: "+id+" does not exist");
@@ -37,30 +34,24 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Transactional
     public void addEmployee(Employee employee) {
-        employeeDao.addEmployee(employee);
+        employeeRepo.save(employee);
 
     }
 
     @Override
-    @Transactional
     public void updateEmployee(Employee employee) {
-        employeeDao.updateEmployee(employee);
+        employeeRepo.save(employee);
 
     }
 
     @Override
-    @Transactional
     public void deleteEmployee(int id) {
-        Employee employee = employeeDao.getEmployee(id);
-        if (employee == null){
-            try {
-                throw new EmployeeException("Employee with id: "+id+" does not exist");
-            } catch (EmployeeException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        employeeDao.deleteEmployee(id);
+      employeeRepo.deleteById(id);
+    }
+
+    @Override
+    public List<Employee> getAllEmployeesByDepartment(Integer department) {
+        return employeeRepo.findAllEmployeesByDepartment(department);
     }
 }

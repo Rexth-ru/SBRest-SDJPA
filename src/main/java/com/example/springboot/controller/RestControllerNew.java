@@ -38,4 +38,8 @@ public class RestControllerNew {
         employeeService.deleteEmployee(id);
         return "Employee with id: "+id+" was deleted";
     }
+    @GetMapping("/employee/department/{department}")
+    public List<Employee> getAllEmployeesByDepartment(@PathVariable Integer department){
+        return employeeService.getAllEmployeesByDepartment(department);
+    }
 }
